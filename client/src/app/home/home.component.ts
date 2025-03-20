@@ -1,6 +1,7 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { AfterViewInit, Component, inject, OnInit } from '@angular/core';
 import { RegisterComponent } from "../register/register.component";
 import { HttpClient } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -9,10 +10,19 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, AfterViewInit {
+
+  constructor(
+    private activatedRoute: ActivatedRoute
+  ){}
+
   http = inject(HttpClient);
   registerMode = false;
   users: any;
+
+
+  ngAfterViewInit(): void {}
+    
 
   ngOnInit(): void {
     this.getUsers();
