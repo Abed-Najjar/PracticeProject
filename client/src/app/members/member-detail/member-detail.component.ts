@@ -4,18 +4,20 @@ import { ActivatedRoute } from '@angular/router';
 import { Member } from '../../_models/member';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 
+
 @Component({
-  selector: 'app-member-detail',
-  standalone: true,
-  imports: [TabsModule],
-  templateUrl: './member-detail.component.html',
-  styleUrl: './member-detail.component.css'
+    selector: 'app-member-detail',
+    standalone: true, // Add this line to make the component standalone
+    imports: [TabsModule],
+    templateUrl: './member-detail.component.html',
+    styleUrl: './member-detail.component.css'
 })
 export class MemberDetailComponent implements OnInit {
 
   private memberService = inject(MembersService);
   private route = inject(ActivatedRoute);
   member?: Member;
+
 
 
   ngOnInit(): void {
@@ -27,7 +29,9 @@ export class MemberDetailComponent implements OnInit {
     const username = this.route.snapshot.paramMap.get('username');
     if(!username) return;
     this.memberService.getMember(username).subscribe({
-      next: member => this.member = member
+      next: member => {
+        this.member = member
+      }
     })
   }
 
