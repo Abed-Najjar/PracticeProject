@@ -15,7 +15,7 @@ namespace API.Controllers;
 public class UsersController(IUserRepository userRepository,IMapper mapper, 
   IPhotoService photoService) : BaseApiController
 {
-    [HttpGet]
+  [HttpGet]
   public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers()
   {
     var users = await userRepository.GetMembersAsync();
@@ -70,6 +70,8 @@ public class UsersController(IUserRepository userRepository,IMapper mapper,
       Url = results.SecureUrl.AbsoluteUri,
       PublicId = results.PublicId,
     };
+
+    if(user.Photos.Count == 0) photo.IsMain = true;
 
 
     user.Photos.Add(photo);

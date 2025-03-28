@@ -34,7 +34,6 @@ export class MembersService {
     )
   }
 
-
   setMainPhoto(photo: Photo){
     return this.http.put(this.baseUrl + 'users/set-main-photo/' + photo.id, {}).pipe(
       tap(() => {
@@ -47,7 +46,6 @@ export class MembersService {
       })
     )
   }
-
 
   deletePhoto(photo: Photo){
     return this.http.delete(this.baseUrl + 'users/delete-photo/' + photo.id).pipe(
