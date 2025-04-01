@@ -26,6 +26,7 @@ public static class ApplicationServiceExtensions
     services.AddScoped<ITokenService, TokenService>();
     services.AddScoped<IUserRepository, UserRepository>();
     services.AddScoped<IPhotoService, PhotoService>(); // added CloudinaryDotNet package
+    services.AddScoped<LogUserActivity>();
     services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
     services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings")); // CloudName , ApiKey , ApiSecret configuration
 

@@ -3,12 +3,14 @@ import { MembersService } from '../../_services/members.service';
 import { ActivatedRoute } from '@angular/router';
 import { Member } from '../../_models/member';
 import { TabsModule } from 'ngx-bootstrap/tabs';
+import { TimeagoModule } from 'ngx-timeago';
+import { DatePipe } from '@angular/common';
 
 
 @Component({
     selector: 'app-member-detail',
     standalone: true, // Add this line to make the component standalone
-    imports: [TabsModule],
+    imports: [TabsModule, TimeagoModule, DatePipe],
     templateUrl: './member-detail.component.html',
     styleUrl: './member-detail.component.css'
 })
@@ -29,7 +31,7 @@ export class MemberDetailComponent implements OnInit {
     const username = this.route.snapshot.paramMap.get('username');
     if(!username) return;
     this.memberService.getMember(username).subscribe({
-      next: member => {
+      next: member => { 
         this.member = member
       }
     })
