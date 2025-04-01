@@ -25,6 +25,7 @@ public static class ApplicationServiceExtensions
     services.AddCors();
     services.AddScoped<ITokenService, TokenService>();
     services.AddScoped<IUserRepository, UserRepository>();
+    services.AddScoped<ILikesRepository, LikesRepository>();
     services.AddScoped<IPhotoService, PhotoService>(); // added CloudinaryDotNet package
     services.AddScoped<LogUserActivity>();
     services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

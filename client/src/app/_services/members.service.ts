@@ -7,6 +7,7 @@ import { PaginatedResults } from '../_models/pagination';
 import { UserParams } from '../_models/userParams';
 import { of } from 'rxjs';
 import { AccountService } from './account.service';
+import { setPaginatedResponse, setPaginationHeaders } from './paginationHelper';
 
 @Injectable({
   providedIn: 'root'
@@ -20,21 +21,17 @@ export class MembersService {
   user = this.accountService.currentUser();
   userParams = signal(new UserParams(this.user));
 
-
-
   resetUserParams(){
     console.log('API URL:', environment.apiUrl);
     this.userParams.set(new UserParams(this.user));
   }
 
-
   getMembers(){
-    console.log('API URL:', environment.apiUrl);
     const response = this.memberCache.get(Object.values(this.userParams()).join('-'));
 
-    if(response) return this.setPaginatedResponse(response);
+    if(response) return setPaginatedResponse(response, this.paginatedResult);
 
-    let params = this.setPaginationHeaders(this.userParams().pageNumber, this.userParams().pageSize);
+    let params = setPaginationHeaders(this.userParams().pageNumber, this.userParams().pageSize);
 
     params = params.append('minAge', this.userParams().minAge);
     params = params.append('maxAge', this.userParams().maxAge);
@@ -43,35 +40,13 @@ export class MembersService {
 
     return this.http.get<Member[]>(this.baseUrl + 'users', {observe: 'response', params}).subscribe({
       next: response => {
-        this.setPaginatedResponse(response);
+        setPaginatedResponse(response, this.paginatedResult);
         this.memberCache.set(Object.values(this.userParams()).join('-'), response);
       }
     })
   }
 
-  private setPaginatedResponse(response: HttpResponse<Member[]>){
-      console.log('API URL:', environment.apiUrl);
-      this.paginatedResult.set({
-      items: response.body as Member[],
-      pagination: JSON.parse(response.headers.get('Pagination')!)
-    })
-  }
-
-  private setPaginationHeaders(pageNumber: number, pageSize: number){
-    console.log('API URL:', environment.apiUrl);
-    let params = new HttpParams();
-
-    if(pageNumber && pageSize){
-      params = params.append('pageNumber', pageNumber);
-      params = params.append('pageSize', pageSize);
-    }
-
-    return params;
-
-  }
-
   getMember(username: string){
-    console.log('API URL:', environment.apiUrl);
     const member: Member = [...this.memberCache.values()]
           .reduce((arr, elem) => arr.concat(elem.body), [])
           .find((m: Member) => m.username === username)
