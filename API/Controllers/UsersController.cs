@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using API.Data.Repositories;
 using API.Dtos;
 using API.Entities;
@@ -8,7 +7,6 @@ using API.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace API.Controllers;
 
@@ -35,7 +33,6 @@ public class UsersController(IUserRepository userRepository,IMapper mapper,
     if (user == null) return NotFound();
     
     return user;
-
   }
 
   [HttpPut]
