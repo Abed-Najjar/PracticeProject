@@ -37,7 +37,7 @@ public class UsersController(IUserRepository userRepository,IMapper mapper,
   }
 
   [HttpPut]
-  public async Task<ActionResult> UpdateUser(memberUpdateDto memberUpdateDto)
+  public async Task<ActionResult> UpdateUser(MemberUpdateDto memberUpdateDto)
   {
 
     // getting a user from our data base via EntityFrameworkCore
