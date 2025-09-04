@@ -19,6 +19,12 @@ var app = builder.Build();
 
 
 // Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowCredentials()
    .WithOrigins("http://localhost:4200", "https://localhost:4200"));
@@ -48,5 +54,8 @@ catch (Exception ex)
    var logger = services.GetRequiredService<ILogger<Program>>();
    logger.LogError(ex, "An error occured during migration");
 }
+
+// Add a simple root endpoint
+app.MapGet("/", () => "Dating App API is running!");
 
 app.Run();
