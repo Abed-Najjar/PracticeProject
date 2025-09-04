@@ -1,0 +1,89 @@
+/* Home Component Theme Styles */
+.container {
+  background: var(--body-bg);
+  color: var(--text-primary);
+  min-height: calc(100vh - 80px);
+  padding-top: 2rem;
+}
+
+.container div[style*="text-align: center"] {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  border-radius: 20px;
+  padding: 3rem 2rem;
+  margin: 2rem auto;
+  max-width: 600px;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+h1 {
+  color: var(--text-primary);
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.lead {
+  color: var(--text-secondary);
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.btn {
+  padding: 0.75rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  margin: 0.5rem;
+}
+
+.btn-primary {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  box-shadow: var(--btn-shadow);
+}
+
+.btn-primary:hover {
+  background: var(--btn-primary-hover-bg);
+  color: var(--btn-primary-hover-text);
+  transform: translateY(-2px);
+  box-shadow: var(--btn-hover-shadow);
+}
+
+.btn-info {
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+  box-shadow: var(--btn-shadow);
+}
+
+.btn-info:hover {
+  background: var(--btn-secondary-hover-bg);
+  color: var(--btn-secondary-hover-text);
+  transform: translateY(-2px);
+  box-shadow: var(--btn-hover-shadow);
+}
+
+/* Register section styling */
+.continer .row {
+  margin-top: 2rem;
+}
+
+.col-4 {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  border-radius: 16px;
+  padding: 2rem;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}

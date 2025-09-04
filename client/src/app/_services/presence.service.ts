@@ -19,7 +19,7 @@ export class PresenceService {
   createHubConnection(user: User){
     this.hubConnection = new HubConnectionBuilder()
       .withUrl(this.hubUrl + 'presence', {
-        accessTokenFactory: () => user.token
+        accessTokenFactory: () => user.token || ''
       })
       .withAutomaticReconnect()
       .build();
@@ -44,7 +44,10 @@ export class PresenceService {
     this.toastr.info(knownAs + 'has sent you a new message! Click me to see it')
       .onTap
       .pipe(take(1))
-      .subscribe(() => this.router.navigateByUrl('/members/' + username + '?tab=Messages'))
+      .subscribe(() => {
+        console.log('Toast clicked - navigating to:', '/members/' + username + '?tab=Messages');
+        this.router.navigateByUrl('/members/' + username + '?tab=Messages');
+      })
 
   })
   

@@ -18,11 +18,18 @@ export class MessageService {
   hubConnection?: HubConnection;
   paginatedResult = signal<PaginatedResults<Message[]> | null>(null);
   messageThread = signal<Message[]>([]);
+  private currentUser?: User;
 
   createHubConnection(user: User, otherUsername: string){
+    // Stop any existing connection first and clear messages
+    this.stopHubConnection();
+    
+    this.currentUser = user; // Store current user
+    console.log('Creating new hub connection for conversation with:', otherUsername);
+    
     this.hubConnection = new HubConnectionBuilder()
       .withUrl(this.hubUrl + 'message?user=' + otherUsername ,{
-        accessTokenFactory: () => user.token
+        accessTokenFactory: () => user.token || ''
       })
       .withAutomaticReconnect()
       .build();
@@ -30,11 +37,42 @@ export class MessageService {
     this.hubConnection.start().catch(error => console.log(error))
     
     this.hubConnection.on('RecieveMessageThread', messages => {
+      console.log('Received message thread with', messages.length, 'messages');
       this.messageThread.set(messages)
     })
 
     this.hubConnection.on('NewMessage', message => {
-      this.messageThread.update(messages => [...messages, message])
+      // Check if this message already exists to prevent duplicates
+      this.messageThread.update(messages => {
+        // Primary check: exact ID match
+        if (messages.some(m => m.id === message.id)) {
+          console.log('Duplicate message detected by ID:', message.id);
+          return messages;
+        }
+        
+        // Secondary check: content, sender, recipient match (for edge cases)
+        const isDuplicate = messages.some(m => 
+          m.senderUsername === message.senderUsername && 
+          m.recipientUsername === message.recipientUsername &&
+          m.content === message.content &&
+          // More precise timing check
+          Math.abs(new Date(m.messageSent).getTime() - new Date(message.messageSent).getTime()) < 5000 // 5 second window
+        );
+        
+        if (isDuplicate) {
+          console.log('Duplicate message detected by content/timing:', message.content);
+          return messages;
+        }
+        
+        console.log('Adding new message:', message.content);
+        return [...messages, message];
+      });
+    })
+
+    this.hubConnection.on('MessageEdited', editedMessage => {
+      this.messageThread.update(messages => 
+        messages.map(m => m.id === editedMessage.id ? editedMessage : m)
+      );
     })
 
     this.hubConnection.on('UpdatedGroup', (group: Group) => {
@@ -54,8 +92,12 @@ export class MessageService {
 
   stopHubConnection(){
     if(this.hubConnection?.state === HubConnectionState.Connected){
+      console.log('Stopping hub connection and clearing message thread');
       this.hubConnection.stop().catch(error => console.log(error))
     }
+    // Clear the message thread when disconnecting to prevent stale data
+    this.messageThread.set([]);
+    console.log('Message thread cleared');
   }
 
   getMessages(pageNumber: number, pageSize: number, container: string){
@@ -74,6 +116,23 @@ export class MessageService {
 
   async sendMessage(username: string, content: string){
     return this.hubConnection?.invoke('SendMessage', {recipientUsername: username, content})
+  }
+
+  async editMessage(messageId: number, newContent: string){
+    // Update message locally first (optimistic update)
+    this.messageThread.update(messages => 
+      messages.map(m => m.id === messageId ? {...m, content: newContent, dateEdited: new Date()} : m)
+    );
+
+    try {
+      return await this.hubConnection?.invoke('EditMessage', {messageId, newContent});
+    } catch (error) {
+      // Revert the optimistic update if it fails
+      this.messageThread.update(messages => 
+        messages.map(m => m.id === messageId ? {...m, content: m.content, dateEdited: undefined} : m)
+      );
+      throw error;
+    }
   }
 
   deleteMessage(id: number){

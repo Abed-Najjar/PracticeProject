@@ -38,16 +38,51 @@ export class MemberEditComponent {
   loadMember(){
     const user = this.accountService.currentUser();
     if(!user) return;
-    this.memberService.getMember(user.username).subscribe({
-      next: member => this.member = member
+    console.log('Loading member data for:', user.username);
+    this.memberService.getMemberFresh(user.username).subscribe({
+      next: member => {
+        console.log('Member data loaded:', member);
+        this.member = member;
+      },
+      error: error => {
+        console.error('Error loading member:', error);
+      }
     })
   }
 
   updateMember(){
-    this.memberService.updateMember(this.editForm?.value).subscribe({
+    // Extract only the fields that the API expects
+    const updateData = {
+      introduction: this.editForm?.value.introduction,
+      lookingFor: this.editForm?.value.lookingFor,
+      interests: this.editForm?.value.interests,
+      city: this.editForm?.value.city,
+      country: this.editForm?.value.country
+    };
+
+    console.log('Updating member with data:', updateData);
+    console.log('Current form values:', this.editForm?.value);
+
+    this.memberService.updateMember(updateData).subscribe({
       next: _ => {
+        console.log('Update successful, reloading member data...');
         this.toastr.success("Profile updated successfully");
-        this.editForm?.reset(this.member);
+        
+        // Add a small delay before reloading to ensure DB is updated
+        setTimeout(() => {
+          this.loadMember();
+        }, 300);
+        
+        // Mark form as pristine after successful update
+        setTimeout(() => {
+          if (this.editForm) {
+            this.editForm.form.markAsPristine();
+          }
+        }, 500);
+      },
+      error: error => {
+        console.error('Update error:', error);
+        this.toastr.error("Failed to update profile");
       }
     })
   }

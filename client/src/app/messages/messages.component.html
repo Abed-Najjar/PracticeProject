@@ -1,83 +1,142 @@
-<div class="container mt-3">
-    <div class="d-flex">
-        <div class="btn-group">
-            <button 
-                class="btn btn-primary" 
-                btnRadio="Unread" 
-                [(ngModel)]="container" 
-                (click)="loadMessages()"
-                >Unread</button>
-            <button 
-                class="btn btn-primary" 
-                btnRadio="Inbox" 
-                [(ngModel)]="container" 
-                (click)="loadMessages()"
-                >Inbox</button>
-            <button 
-                class="btn btn-primary" 
-                btnRadio="Outbox" 
-                [(ngModel)]="container" 
-                (click)="loadMessages()"
-                >Outbox</button>
+<div class="messages-container">
+    <!-- Header Section -->
+    <div class="messages-header">
+        <div class="header-content">
+            <div class="header-title">
+                <i class="fas fa-envelope header-icon"></i>
+                <h1>Messages</h1>
+                <span class="message-count">
+                    @if (messageService.paginatedResult()?.pagination?.totalItems) {
+                        {{ messageService.paginatedResult()?.pagination?.totalItems }} {{ messageService.paginatedResult()?.pagination?.totalItems === 1 ? 'conversation' : 'conversations' }}
+                    }
+                </span>
+            </div>
+            
+            <!-- Filter Tabs -->
+            <div class="filter-tabs">
+                <button 
+                    class="filter-tab"
+                    [class.active]="container === 'Unread'"
+                    btnRadio="Unread" 
+                    [(ngModel)]="container" 
+                    (click)="loadMessages()">
+                    <i class="fas fa-bell"></i>
+                    <span>Unread</span>
+                </button>
+                <button 
+                    class="filter-tab"
+                    [class.active]="container === 'Inbox'"
+                    btnRadio="Inbox" 
+                    [(ngModel)]="container" 
+                    (click)="loadMessages()">
+                    <i class="fas fa-inbox"></i>
+                    <span>Inbox</span>
+                </button>
+                <button 
+                    class="filter-tab"
+                    [class.active]="container === 'Outbox'"
+                    btnRadio="Outbox" 
+                    [(ngModel)]="container" 
+                    (click)="loadMessages()">
+                    <i class="fas fa-paper-plane"></i>
+                    <span>Outbox</span>
+                </button>
+            </div>
         </div>
     </div>
-</div>
 
-
-@if (!messageService.paginatedResult()?.items || messageService.paginatedResult()?.items?.length === 0) {
-    <h3 class="mt-3">No messages</h3>
-}@else {
-    <table class="table table-hover mt-3" style="cursor: pointer;">
-        <thead>
-            <tr>
-                <th style="width: 40%;">Message</th>
-                <th style="width: 20%;">From / To</th>
-                <th style="width: 20%;">Sent / Recieved</th>
-                <th style="width: 20%;"></th>
-            </tr>
-        </thead>
-
-        <tbody class="align-middle">
-            @for (message of messageService.paginatedResult()?.items; track message.id) {
-                <tr routerLink="{{getRoute(message)}}" [queryParams]="{tab: 'Messages'}">
-                    <td>{{message.content}}</td>
-                    <td>
-                        <div>
-                            <img 
-                            [src]="isOutbox
-                            ? (message.recipientPhotoUrl || './assets/user.png') 
-                            : (message.senderPhotoUrl || './assets/user.png')" 
-                            alt="image of user"
-                            class="rounded-circle me-2"
-                            >
+    <!-- Messages Content -->
+    <div class="messages-content">
+        @if (!messageService.paginatedResult()?.items || messageService.paginatedResult()?.items?.length === 0) {
+            <div class="empty-state">
+                <div class="empty-state-icon">
+                    <i class="fas fa-inbox"></i>
+                </div>
+                <h3>No messages found</h3>
+                <p>{{ getEmptyStateMessage() }}</p>
+            </div>
+        } @else {
+            <div class="messages-list">
+                @for (message of messageService.paginatedResult()?.items; track message.id) {
+                    <div class="message-card" 
+                         routerLink="{{getRoute(message)}}" 
+                         [queryParams]="{tab: 'Messages'}"
+                         [class.unread]="container === 'Unread'">
+                        
+                        <!-- Avatar Section -->
+                        <div class="message-avatar">
+                            <div class="avatar-container">
+                                <img 
+                                    [src]="isOutbox
+                                    ? (message.recipientPhotoUrl || './assets/user.png') 
+                                    : (message.senderPhotoUrl || './assets/user.png')" 
+                                    [alt]="isOutbox ? message.recipientUsername : message.senderUsername"
+                                    class="avatar-image">
+                                <div class="avatar-status" [class.online]="false"></div>
+                            </div>
                         </div>
-                        <strong>{{isOutbox
-                        ? message.recipientUsername : message.senderUsername}}</strong>
-                    </td>
-                    <td>{{message.messageSent | timeago}}</td>
-                    <td (click)="$event.stopPropagation()"><button (click)="deleteMessage(message.id)" class="btn btn-danger">Delete</button></td>
-                </tr>
-                
-            }
-        </tbody>
 
-    </table>
-}
+                        <!-- Message Content -->
+                        <div class="message-content">
+                            <div class="message-header">
+                                <div class="message-participant">
+                                    <span class="participant-name">
+                                        {{ isOutbox ? message.recipientUsername : message.senderUsername }}
+                                    </span>
+                                    <span class="message-direction">
+                                        <i class="fas" [class.fa-arrow-right]="isOutbox" [class.fa-arrow-left]="!isOutbox"></i>
+                                        {{ isOutbox ? 'To' : 'From' }}
+                                    </span>
+                                </div>
+                                <div class="message-time">
+                                    <i class="fas fa-clock"></i>
+                                    <span>{{ message.messageSent | timeago }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="message-preview">
+                                <p>{{ message.content }}</p>
+                            </div>
+                        </div>
 
-@if (messageService.paginatedResult()?.pagination && messageService.paginatedResult()?.pagination?.totalItems! > 0) {
-    <div class="d-flex justify-content-center">
-        <pagination 
-            [boundaryLinks]="true"
-            [totalItems]="messageService.paginatedResult()?.pagination!.totalItems"     
-            [itemsPerPage]="messageService.paginatedResult()?.pagination!.itemsPerPage"
-            (pageChanged)="pageChanged($event)"     
-            [ngModel]="messageService.paginatedResult()?.pagination!.currentPage"
-            [maxSize]="10"
-            previousText="&lsaquo;"
-            nextText="&rsaquo;"
-            firstText="&laquo;"
-            lastText="&raquo;">
+                        <!-- Actions Section -->
+                        <div class="message-actions" (click)="$event.stopPropagation()">
+                            <button class="action-btn reply-btn" 
+                                    [routerLink]="getRoute(message)" 
+                                    [queryParams]="{tab: 'Messages'}"
+                                    title="Reply">
+                                <i class="fas fa-reply"></i>
+                            </button>
+                            <button class="action-btn delete-btn" 
+                                    (click)="deleteMessage(message.id)"
+                                    title="Delete">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
         
-        </pagination>
+        <!-- Pagination -->
+        @if (messageService.paginatedResult()?.pagination && messageService.paginatedResult()?.pagination?.totalItems! > 0) {
+            <div class="pagination-container">
+                <div class="pagination-wrapper">
+                    <pagination 
+                        [boundaryLinks]="true"
+                        [totalItems]="messageService.paginatedResult()?.pagination!.totalItems"     
+                        [itemsPerPage]="messageService.paginatedResult()?.pagination!.itemsPerPage"
+                        (pageChanged)="pageChanged($event)"     
+                        [ngModel]="messageService.paginatedResult()?.pagination!.currentPage"
+                        [maxSize]="10"
+                        previousText="&lsaquo;"
+                        nextText="&rsaquo;"
+                        firstText="&laquo;"
+                        lastText="&raquo;"
+                        class="custom-pagination">
+                    </pagination>
+                </div>
+            </div>
+        }
     </div>
-}
+</div>

@@ -1,15 +1,107 @@
-<h2>Admin panel</h2>
-<div class="tab-panel">
-    <tabset class="member-tabset">
-        <tab heading="User management" *appHasRole="['Admin']">
-            <div class="container">
-                <app-user-management></app-user-management>
-            </div>
-        </tab>
-        <tab heading="Photo management" *appHasRole="['Admin', 'Moderator']">
-            <div class="container">
-                <app-photo-management></app-photo-management>
-            </div>
-        </tab>
-    </tabset>
+<div class="modern-admin-panel">
+  <!-- Header Section -->
+  <div class="admin-header">
+    <div class="header-content">
+      <div class="title-section">
+        <h1 class="admin-title">
+          <i class="fas fa-shield-alt"></i>
+          Admin Dashboard
+        </h1>
+        <p class="admin-subtitle">Manage users, content, and system settings</p>
+      </div>
+      <div class="header-stats">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-number">{{totalUsers || 0}}</span>
+            <span class="stat-label">Total Users</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-images"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-number">{{pendingPhotos || 0}}</span>
+            <span class="stat-label">Pending Photos</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Tabs -->
+  <div class="admin-nav">
+    <div class="nav-container">
+      <button 
+        class="nav-tab"
+        [class.active]="activeTab === 'users'"
+        (click)="setActiveTab('users')"
+        *appHasRole="['Admin']">
+        <i class="fas fa-users-cog"></i>
+        <span>User Management</span>
+      </button>
+      <button 
+        class="nav-tab"
+        [class.active]="activeTab === 'photos'"
+        (click)="setActiveTab('photos')"
+        *appHasRole="['Admin', 'Moderator']">
+        <i class="fas fa-photo-video"></i>
+        <span>Photo Management</span>
+      </button>
+      <button 
+        class="nav-tab"
+        [class.active]="activeTab === 'reports'"
+        (click)="setActiveTab('reports')"
+        *appHasRole="['Admin', 'Moderator']">
+        <i class="fas fa-flag"></i>
+        <span>Reports</span>
+      </button>
+      <button 
+        class="nav-tab"
+        [class.active]="activeTab === 'settings'"
+        (click)="setActiveTab('settings')"
+        *appHasRole="['Admin']">
+        <i class="fas fa-cog"></i>
+        <span>Settings</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Content Area -->
+  <div class="admin-content">
+    <!-- User Management Tab -->
+    <div class="tab-content" *ngIf="activeTab === 'users' && hasRole(['Admin'])">
+      <app-user-management></app-user-management>
+    </div>
+
+    <!-- Photo Management Tab -->
+    <div class="tab-content" *ngIf="activeTab === 'photos' && hasRole(['Admin', 'Moderator'])">
+      <app-photo-management></app-photo-management>
+    </div>
+
+    <!-- Reports Tab -->
+    <div class="tab-content" *ngIf="activeTab === 'reports' && hasRole(['Admin', 'Moderator'])">
+      <div class="reports-placeholder">
+        <div class="placeholder-card">
+          <i class="fas fa-chart-line"></i>
+          <h3>Reports & Analytics</h3>
+          <p>Coming soon - User reports and system analytics will be available here.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Tab -->
+    <div class="tab-content" *ngIf="activeTab === 'settings' && hasRole(['Admin'])">
+      <div class="settings-placeholder">
+        <div class="placeholder-card">
+          <i class="fas fa-tools"></i>
+          <h3>System Settings</h3>
+          <p>Coming soon - Global system settings and configuration options.</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

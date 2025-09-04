@@ -1,63 +1,151 @@
-
-    <div class="row">
-        <div class="col-4">
-            <div class="card">
-                <img src="{{member.photoUrl || './assets/user.png'}}" 
-                     alt="{{member.knownAs}}"
-                     class="card-img img-thumbnail"
-                >
-
-                <div class="card-body">
+<div class="profile-container">
+    <!-- Profile Header -->
+    <div class="profile-header">
+        <div class="header-background">
+            <div class="header-overlay"></div>
+        </div>
+        
+        <div class="header-content">
+            <!-- Profile Image Section -->
+            <div class="profile-image-section">
+                <div class="profile-image-wrapper">
+                    <img src="{{member.photoUrl || './assets/user.png'}}" 
+                         alt="{{member.knownAs}}"
+                         class="profile-image">
+                    <div class="image-border"></div>
                     @if (presenceService.onlineUsers().includes(member.username)) {
-                        <div class="mb-2">
-                            <i class="fa fa-user-circle text-success"></i> Online now
+                        <div class="online-status">
+                            <div class="status-dot"></div>
+                            <span class="status-text">Online</span>
                         </div>
                     }
-                    <div>
-                        <strong>Location:</strong>
-                        <p>{{member.city}}, {{member.country}}</p>
+                </div>
+            </div>
+
+            <!-- Profile Info Section -->
+            <div class="profile-info-section">
+                <div class="profile-name-section">
+                    <h1 class="profile-name">{{member.knownAs}}</h1>
+                    <div class="profile-age">{{member.age}} years old</div>
+                </div>
+
+                <div class="profile-location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>{{member.city}}, {{member.country}}</span>
+                </div>
+
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Last Active</div>
+                        <div class="stat-value">{{member.lastActive | timeago}}</div>
                     </div>
-                    <div>
-                        <strong>Age:</strong>
-                        <p>{{member.age}}</p>
-                    </div>
-                    <div>
-                        <strong>Last Active:</strong>
-                        <p>{{member.lastActive | timeago}}</p>
-                    </div>
-                    <div>
-                        <strong>Member since:</strong>
-                        <p>{{member.created | date: 'dd MMM yyyy'}}</p>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <div class="stat-label">Member Since</div>
+                        <div class="stat-value">{{member.created | date: 'MMM yyyy'}}</div>
                     </div>
                 </div>
-                <div class="card-footer">
-                    <div class="btn-group d-flex">
-                        <button class="btn btn-primary">Like</button>
-                        <button (click)="selectTab('Messages')" class="btn btn-success">Message</button>
-                    </div>
+
+                <!-- Action Buttons -->
+                <div class="profile-actions">
+                    <button class="action-btn like-btn">
+                        <i class="fas fa-heart"></i>
+                        <span>Like</span>
+                    </button>
+                    <button (click)="selectTab('Messages')" class="action-btn message-btn">
+                        <i class="fas fa-envelope"></i>
+                        <span>Message</span>
+                    </button>
+                    <button class="action-btn more-btn">
+                        <i class="fas fa-ellipsis-h"></i>
+                    </button>
                 </div>
             </div>
         </div>
-
-        <div class="col-8">
-            <tabset class="member-tabset" #memberTabs>
-                <tab heading="About {{member.knownAs}}" (selectTab)="onTabActivated($event)">    
-                    <h4>Description</h4>
-                    <p>{{member.introduction}}</p>
-                    <h4>Looking For</h4>
-                    <p>{{member.lookingFor}}</p>
-                </tab>
-                <tab heading="Interests" (selectTab)="onTabActivated($event)">
-                    <h4>Interests</h4>
-                    <p>{{member.lookingFor}}</p>
-                </tab>
-
-                <tab heading="Messages" (selectTab)="onTabActivated($event)">
-                    <app-members-messages 
-                        [username]="member.username"
-                    ></app-members-messages>
-                </tab>
-            </tabset>
-        </div>
-
     </div>
+
+    <!-- Profile Content -->
+    <div class="profile-content">
+        <div class="content-container">
+            <!-- Enhanced Tabs -->
+            <div class="enhanced-tabs-container">
+                <tabset class="enhanced-tabset" #memberTabs>
+                    <tab heading="About {{member.knownAs}}" (selectTab)="onTabActivated($event)" class="enhanced-tab">
+                        <div class="tab-content-wrapper">
+                            <div class="content-section">
+                                <div class="section-header">
+                                    <i class="fas fa-user-circle"></i>
+                                    <h3>About {{member.knownAs}}</h3>
+                                </div>
+                                <div class="content-card">
+                                    <h4 class="content-title">
+                                        <i class="fas fa-quote-left"></i>
+                                        Introduction
+                                    </h4>
+                                    <p class="content-text">{{member.introduction}}</p>
+                                </div>
+                            </div>
+
+                            <div class="content-section">
+                                <div class="content-card">
+                                    <h4 class="content-title">
+                                        <i class="fas fa-search-heart"></i>
+                                        Looking For
+                                    </h4>
+                                    <p class="content-text">{{member.lookingFor}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </tab>
+
+                    <tab heading="Interests" (selectTab)="onTabActivated($event)" class="enhanced-tab">
+                        <div class="tab-content-wrapper">
+                            <div class="content-section">
+                                <div class="section-header">
+                                    <i class="fas fa-heart"></i>
+                                    <h3>Interests & Hobbies</h3>
+                                </div>
+                                <div class="content-card">
+                                    <div class="interests-grid">
+                                        @if (member.interests && member.interests.trim()) {
+                                            @for (interest of member.interests.split(','); track interest) {
+                                                @if (interest.trim()) {
+                                                    <div class="interest-tag">
+                                                        <i class="fas fa-tag"></i>
+                                                        <span>{{interest.trim()}}</span>
+                                                    </div>
+                                                }
+                                            }
+                                        } @else {
+                                            <div class="no-interests">
+                                                <i class="fas fa-plus-circle"></i>
+                                                <p>No interests listed yet</p>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </tab>
+
+                    <tab heading="Messages" (selectTab)="onTabActivated($event)" class="enhanced-tab">
+                        <div class="tab-content-wrapper">
+                            <div class="messages-section">
+                                <div class="section-header">
+                                    <i class="fas fa-comments"></i>
+                                    <h3>Chat with {{member.knownAs}}</h3>
+                                </div>
+                                <div class="messages-container">
+                                    <app-members-messages 
+                                        [username]="member.username"
+                                        class="enhanced-messages">
+                                    </app-members-messages>
+                                </div>
+                            </div>
+                        </div>
+                    </tab>
+                </tabset>
+            </div>
+        </div>
+    </div>
+</div>

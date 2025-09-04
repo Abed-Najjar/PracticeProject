@@ -1,99 +1,270 @@
-<div class="row">
-
-    <div class="text-center mt-3">
-        <h2>Your matches - {{memberService.paginatedResult()?.pagination?.totalItems}}</h2>
+<!-- Modern Member List with Enhanced Design System -->
+<div class="modern-member-list" [class.theme-dark]="themeService.isDarkMode()">
+  <div class="main-container">
+    
+    <!-- Enhanced Header Section -->
+    <div class="enhanced-header">
+      <div class="header-main">
+        <div class="title-section">
+          <h1 class="main-title">
+            <span class="title-icon">👥</span>
+            Discover Amazing People
+          </h1>
+          <div class="members-count">
+            <span class="count-number">{{memberService.paginatedResult()?.pagination?.totalItems || 0}}</span>
+            <span class="count-label">members available</span>
+          </div>
+        </div>
+        
+        <!-- Enhanced View Controls -->
+        <div class="enhanced-view-controls">
+          <div class="view-label">View:</div>
+          <div class="view-buttons">
+            <button 
+              class="view-btn"
+              [class.active]="viewMode === 'grid'"
+              (click)="viewMode = 'grid'"
+              title="Grid View"
+            >
+              <i class="fas fa-th-large"></i>
+              <span>Grid</span>
+            </button>
+            <button 
+              class="view-btn"
+              [class.active]="viewMode === 'list'"
+              (click)="viewMode = 'list'"
+              title="List View"
+            >
+              <i class="fas fa-list"></i>
+              <span>List</span>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="container mt-3">
-        <form #form="ngForm" class="d-flex mb-3" (ngSubmit)="loadMembers()">
-            <div class="d-flex mx-2">
-                <label class="col-form-label">Age from: </label>
-                <input 
+    <!-- Enhanced Filters Section -->
+    <div class="enhanced-filters">
+      <div class="filters-container">
+        <div class="filters-header-new">
+          <div class="filters-title-new">
+            <i class="fas fa-sliders-h"></i>
+            <span>Refine Your Search</span>
+          </div>
+        </div>
+        
+        <form #form="ngForm" class="enhanced-filters-form" (ngSubmit)="loadMembers()">
+          <div class="filters-grid">
+            
+            <!-- Age Range Filter -->
+            <div class="filter-card">
+              <div class="filter-header">
+                <i class="fas fa-birthday-cake"></i>
+                <span class="filter-title">Age Range</span>
+              </div>
+              <div class="age-range-inputs">
+                <div class="age-input-wrapper">
+                  <label class="age-label">From</label>
+                  <input 
                     type="number" 
-                    class="form-control-ms-1" 
-                    style="width: 70px;"
+                    class="enhanced-input"
                     name="minAge"
                     [(ngModel)]="memberService.userParams().minAge"
-                >
-            </div>
-
-            <div class="d-flex mx-2">
-                <label class="col-form-label">Age to: </label>
-                <input 
+                    min="18"
+                    max="100"
+                    placeholder="18"
+                  >
+                </div>
+                <div class="age-separator">—</div>
+                <div class="age-input-wrapper">
+                  <label class="age-label">To</label>
+                  <input 
                     type="number" 
-                    class="form-control-ms-1" 
-                    style="width: 70px;"
+                    class="enhanced-input"
                     name="maxAge"
                     [(ngModel)]="memberService.userParams().maxAge"
-                >
-            </div>
-
-            <div class="d-flex mx-2">
-                <label class="col-form-label">Show: </label>
-                <select 
-                    name="gender" 
-                    style="width: 130px;" 
-                    class="form-select ms-1"
-                    [(ngModel)]="memberService.userParams().gender"
-                >
-                @for (gender of genderList; track gender.value) {
-                    <option [value]="gender.value">
-                        {{gender.display}}
-                    </option>
-                }
-            </select>
-            </div>
-
-            <button class="btn btn-primary ms-1" type="submit">Apply filters</button>
-            <button (click)="resetFilters()" class="btn btn-info ms-1" type="button">Reset filters</button>
-
-            <div class="col">
-                <div class="btn-group float-end">
-                    <button 
-                        type="button"
-                        class="btn btn-primary"
-                        name="orderBy"
-                        (click)="loadMembers()"
-                        btnRadio="lastActive"
-                        [(ngModel)]="memberService.userParams().orderBy"
-                    >Last Active</button>
-                    
-                    <button 
-                    type="button"
-                    class="btn btn-primary"
-                    name="orderBy"
-                    (click)="loadMembers()"
-                    btnRadio="created"
-                    [(ngModel)]="memberService.userParams().orderBy"
-                >Newest Members</button>
+                    min="18"
+                    max="100"
+                    placeholder="99"
+                  >
                 </div>
+              </div>
             </div>
 
+            <!-- Gender Filter -->
+            <div class="filter-card">
+              <div class="filter-header">
+                <i class="fas fa-venus-mars"></i>
+                <span class="filter-title">Gender</span>
+              </div>
+              <div class="gender-select-wrapper">
+                <select 
+                  name="gender" 
+                  class="enhanced-select"
+                  [(ngModel)]="memberService.userParams().gender"
+                >
+                  <option value="">All Genders</option>
+                  @for (gender of genderList; track gender.value) {
+                    <option [value]="gender.value">
+                      {{gender.display}}
+                    </option>
+                  }
+                </select>
+                <i class="fas fa-chevron-down select-arrow"></i>
+              </div>
+            </div>
+
+            <!-- Sort By Filter -->
+            <div class="filter-card">
+              <div class="filter-header">
+                <i class="fas fa-sort-amount-down"></i>
+                <span class="filter-title">Sort By</span>
+              </div>
+              <div class="sort-select-wrapper">
+                <select 
+                  name="orderBy" 
+                  class="enhanced-select"
+                  [(ngModel)]="memberService.userParams().orderBy"
+                >
+                  <option value="lastActive">Last Active</option>
+                  <option value="created">Newest Members</option>
+                  <option value="age">Age</option>
+                </select>
+                <i class="fas fa-chevron-down select-arrow"></i>
+              </div>
+            </div>
+
+            <!-- Filter Actions -->
+            <div class="filter-actions-card">
+              <button class="apply-btn" type="submit">
+                <i class="fas fa-search"></i>
+                <span>Apply</span>
+              </button>
+              <button 
+                (click)="resetFilters()" 
+                class="reset-btn" 
+                type="button"
+              >
+                <i class="fas fa-undo"></i>
+                <span>Reset</span>
+              </button>
+            </div>
+
+          </div>
         </form>
+      </div>
     </div>
 
-        @for (member of memberService.paginatedResult()?.items; track member.id) {
-            <div class="col-2">
-                <app-member-card [member]="member"></app-member-card>
-            </div>
-        }
-    
-</div>
-
-@if (memberService.paginatedResult()?.pagination) {
-    <div class="d-flex justify-content-center">
-        <pagination 
-            [boundaryLinks]="true"
-            [totalItems]="memberService.paginatedResult()?.pagination!.totalItems"     
-            [itemsPerPage]="memberService.paginatedResult()?.pagination!.itemsPerPage"
-            (pageChanged)="pageChanged($event)"
-            [ngModel]="memberService.paginatedResult()?.pagination!.currentPage"
-            [maxSize]="10"
-            previousText="&lsaquo;"
-            nextText="&rsaquo;"
-            firstText="&laquo;"
-            lastText="&raquo;">
+    <!-- Enhanced Members Section -->
+    <div class="enhanced-members-section">
+      @if (memberService.paginatedResult()?.items && (memberService.paginatedResult()?.items?.length ?? 0) > 0) {
         
-        </pagination>
+        <!-- Enhanced Grid View -->
+        <div 
+          *ngIf="viewMode === 'grid'"
+          class="enhanced-members-grid"
+        >
+          @for (member of memberService.paginatedResult()?.items ?? []; track member.id) {
+            <div class="enhanced-member-card" [attr.data-member-id]="member.id">
+              <app-member-card [member]="member"></app-member-card>
+            </div>
+          }
+        </div>
+
+        <!-- Enhanced List View -->
+        <div 
+          *ngIf="viewMode === 'list'"
+          class="enhanced-members-list"
+        >
+          @for (member of memberService.paginatedResult()?.items ?? []; track member.id) {
+            <div class="enhanced-list-item">
+              <div class="list-item-photo-section">
+                <div class="photo-container">
+                  <img 
+                    [src]="member.photoUrl || 'assets/user.png'"
+                    [alt]="member.knownAs"
+                    class="member-photo"
+                  >
+                  <div class="photo-overlay">
+                    <i class="fas fa-eye"></i>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="list-item-content-section">
+                <div class="member-basic-info">
+                  <h3 class="member-name">{{member.knownAs}}</h3>
+                  <div class="member-details">
+                    <span class="age-info">
+                      <i class="fas fa-birthday-cake"></i>
+                      {{member.age}} years old
+                    </span>
+                    <span class="location-info">
+                      <i class="fas fa-map-marker-alt"></i>
+                      {{member.city}}, {{member.country}}
+                    </span>
+                  </div>
+                </div>
+                
+                <div class="member-intro">
+                  <p class="intro-text">{{member.introduction}}</p>
+                </div>
+              </div>
+              
+              <div class="list-item-actions-section">
+                <button class="action-btn primary" (click)="onMemberView(member)">
+                  <i class="fas fa-user"></i>
+                  <span>View Profile</span>
+                </button>
+                <button class="action-btn secondary" (click)="onMemberMessage(member)">
+                  <i class="fas fa-envelope"></i>
+                  <span>Message</span>
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+
+      } @else {
+        <!-- Enhanced Empty State -->
+        <div class="enhanced-empty-state">
+          <div class="empty-state-content">
+            <div class="empty-icon">
+              <i class="fas fa-search"></i>
+            </div>
+            <h3 class="empty-title">No members found</h3>
+            <p class="empty-description">
+              Try adjusting your search filters or check back later for new members.
+            </p>
+            <button class="empty-action-btn" (click)="resetFilters()">
+              <i class="fas fa-refresh"></i>
+              <span>Reset Filters</span>
+            </button>
+          </div>
+        </div>
+      }
     </div>
-}
+
+    <!-- Enhanced Pagination -->
+    @if (memberService.paginatedResult()?.pagination && (memberService.paginatedResult()?.pagination?.totalPages ?? 0) > 1) {
+      <div class="enhanced-pagination-section">
+        <div class="pagination-info">
+          <span>Showing page {{memberService.userParams().pageNumber}} of {{memberService.paginatedResult()?.pagination?.totalPages}}</span>
+        </div>
+        <pagination 
+          [boundaryLinks]="true"
+          [totalItems]="memberService.paginatedResult()?.pagination?.totalItems ?? 0"
+          [itemsPerPage]="memberService.paginatedResult()?.pagination?.itemsPerPage ?? 10"
+          [(ngModel)]="memberService.userParams().pageNumber"
+          (pageChanged)="pageChanged($event)"
+          previousText="‹" 
+          nextText="›" 
+          firstText="«" 
+          lastText="»"
+          class="enhanced-pagination"
+        ></pagination>
+      </div>
+    }
+
+  </div>
+</div>

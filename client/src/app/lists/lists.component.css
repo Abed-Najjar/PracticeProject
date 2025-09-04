@@ -1,0 +1,103 @@
+/* Lists Component Theme Styles */
+.container {
+  background: var(--body-bg);
+  color: var(--text-primary);
+  min-height: calc(100vh - 100px);
+  padding-top: 100px;
+}
+
+.text-center {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  border-radius: 16px;
+  padding: 2rem;
+  margin: 2rem auto;
+  max-width: 800px;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+h2 {
+  color: var(--text-primary);
+  font-weight: 700;
+  margin: 0;
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.d-flex {
+  justify-content: center;
+  margin: 2rem 0;
+}
+
+.btn-group {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  border-radius: 12px;
+  padding: 0.5rem;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 0.25rem;
+}
+
+.btn-primary {
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+  border: 1px solid var(--btn-secondary-border);
+}
+
+.btn-primary:hover {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  transform: translateY(-1px);
+}
+
+.btn-primary.active,
+.btn-primary[aria-pressed="true"] {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  box-shadow: var(--btn-shadow);
+}
+
+/* Member cards styling */
+.row {
+  gap: 1rem;
+  justify-content: center;
+}
+
+.col-2 {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 1rem;
+  margin: 0.5rem;
+  box-shadow: var(--card-shadow);
+  transition: all 0.3s ease;
+}
+
+.col-2:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--card-hover-shadow);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .btn-group {
+    flex-direction: column;
+  }
+  
+  .btn {
+    margin: 0.25rem 0;
+  }
+}

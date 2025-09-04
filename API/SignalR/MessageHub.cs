@@ -44,9 +44,12 @@ public class MessageHub(IUnitOfWork unitOfWork, IMapper mapper, IHubContext<Pres
   public async Task SendMessage(CreateMessageDto createMessageDto)
   {
     var username = Context.User?.GetUsername() ?? throw new Exception("Could not get user");
+    
+    Console.WriteLine($"[MessageHub] SendMessage called by {username} to {createMessageDto.RecipientUsername}: '{createMessageDto.Content}'");
 
-    if(username == createMessageDto.RecipientUsername.ToLower())
-      throw new HubException("You cannot message your self"); 
+    // Commented out self-message validation to allow self-messaging
+    // if(username == createMessageDto.RecipientUsername.ToLower())
+    //   throw new HubException("You cannot message your self"); 
 
     var sender = await unitOfWork.UserRepository.GetUserByUsernameAsync(username);
     var recipient = await unitOfWork.UserRepository.GetUserByUsernameAsync(createMessageDto.RecipientUsername);
@@ -81,10 +84,44 @@ public class MessageHub(IUnitOfWork unitOfWork, IMapper mapper, IHubContext<Pres
     }
 
     unitOfWork.MessageRepository.AddMessage(message);
+    Console.WriteLine($"[MessageHub] About to save message to database: ID will be assigned, Content: '{message.Content}'");
 
     if(await unitOfWork.Complete())
     {
+      Console.WriteLine($"[MessageHub] Message saved successfully with ID: {message.Id}");
       await Clients.Group(groupName).SendAsync("NewMessage", mapper.Map<MessageDto>(message));
+    }
+    else
+    {
+      Console.WriteLine($"[MessageHub] Failed to save message to database");
+    }
+  }
+
+  public async Task EditMessage(EditMessageDto editMessageDto)
+  {
+    var username = Context.User?.GetUsername() ?? throw new Exception("Could not get user");
+    
+    var message = await unitOfWork.MessageRepository.GetMessage(editMessageDto.MessageId);
+    
+    if (message == null)
+      throw new HubException("Message not found");
+    
+    if (message.SenderUsername != username)
+      throw new HubException("You can only edit your own messages");
+    
+    // Check if message is within 1 minute edit window
+    var oneMinuteAgo = DateTime.UtcNow.AddMinutes(-1);
+    if (message.MessageSent < oneMinuteAgo)
+      throw new HubException("Message can only be edited within 1 minute of sending");
+    
+    // Update message content
+    message.Content = editMessageDto.NewContent;
+    message.DateEdited = DateTime.UtcNow;
+    
+    if (await unitOfWork.Complete())
+    {
+      var groupName = GetGroupName(message.SenderUsername, message.RecipientUsername);
+      await Clients.Group(groupName).SendAsync("MessageEdited", mapper.Map<MessageDto>(message));
     }
   }
 

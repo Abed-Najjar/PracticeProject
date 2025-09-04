@@ -1,3 +1,103 @@
+/* Import unified theme system */
+@import url('./styles/themes.css');
+
+/* Import our modern design system */
+@import url('./app/core/design-system/design-system.css');
+
+/* Global theme application */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+body {
+  background: var(--body-bg);
+  color: var(--text-primary);
+  font-family: var(--font-family);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+/* Container and common layout elements */
+.container, .container-fluid {
+  background: transparent;
+  color: var(--text-primary);
+}
+
+/* Bootstrap button overrides to use theme */
+.btn {
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background: var(--btn-primary-bg);
+  border-color: var(--btn-primary-border);
+  color: var(--btn-primary-text);
+}
+
+.btn-primary:hover {
+  background: var(--btn-primary-hover-bg);
+  border-color: var(--btn-primary-hover-border);
+  color: var(--btn-primary-hover-text);
+}
+
+.btn-info {
+  background: var(--btn-secondary-bg);
+  border-color: var(--btn-secondary-border);
+  color: var(--btn-secondary-text);
+}
+
+.btn-info:hover {
+  background: var(--btn-secondary-hover-bg);
+  border-color: var(--btn-secondary-hover-border);
+  color: var(--btn-secondary-hover-text);
+}
+
+/* Form elements */
+.form-control, .form-select {
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--input-text);
+}
+
+.form-control:focus, .form-select:focus {
+  background: var(--input-focus-bg);
+  border-color: var(--input-focus-border);
+  color: var(--input-focus-text);
+  box-shadow: 0 0 0 0.2rem var(--input-focus-shadow);
+}
+
+/* Card components */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  color: var(--text-primary);
+}
+
+.card-header {
+  background: var(--card-header-bg);
+  border-bottom: 1px solid var(--card-border);
+  color: var(--text-primary);
+}
+
+/* Text colors */
+.text-primary {
+  color: var(--primary-color) !important;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.lead {
+  color: var(--text-secondary);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-primary);
+}
+
+/* Legacy styles - keeping for compatibility */
 .tab-panel {
     border: 1px solid #ddd;
     padding: 10px;

@@ -49,6 +49,19 @@ export class MessagesComponent implements OnInit {
         else return `/members/${message.senderUsername}`;
     }
 
+    getEmptyStateMessage(): string {
+        switch(this.container) {
+            case 'Unread':
+                return 'All caught up! No unread messages at the moment.';
+            case 'Inbox':
+                return 'Your inbox is empty. Start a conversation to see messages here.';
+            case 'Outbox':
+                return 'No sent messages yet. Send your first message to get started.';
+            default:
+                return 'No messages found.';
+        }
+    }
+
     pageChanged(event: any){
         if(this.pageNumber !== event.page){
             this.pageNumber = event.page;

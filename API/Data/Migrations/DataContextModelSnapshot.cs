@@ -85,6 +85,9 @@ namespace API.Data.Migrations
                     b.Property<string>("Interests")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Introduction")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("KnownAs")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -117,9 +120,6 @@ namespace API.Data.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("Production")
-                        .HasColumnType("TEXT");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("TEXT");
@@ -197,6 +197,9 @@ namespace API.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime?>("DateEdited")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime?>("DateRead")
                         .HasColumnType("TEXT");
 
@@ -239,6 +242,9 @@ namespace API.Data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("AppUserId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsApproved")
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsMain")

@@ -1,1 +1,145 @@
-<p>photo-management works!</p>
+<div class="modern-photo-management">
+  <!-- Header Section -->
+  <div class="section-header">
+    <div class="header-content">
+      <div class="title-section">
+        <h2 class="section-title">
+          <i class="fas fa-photo-video"></i>
+          Photo Management
+        </h2>
+        <p class="section-description">Review and moderate user uploaded photos</p>
+      </div>
+      <div class="action-buttons">
+        <button class="modern-btn modern-btn-secondary">
+          <i class="fas fa-download"></i>
+          Export Report
+        </button>
+        <button class="modern-btn modern-btn-primary">
+          <i class="fas fa-sync-alt"></i>
+          Refresh
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-grid">
+    <div class="stat-card pending">
+      <div class="stat-icon">
+        <i class="fas fa-clock"></i>
+      </div>
+      <div class="stat-content">
+        <h3>12</h3>
+        <p>Pending Review</p>
+      </div>
+    </div>
+    <div class="stat-card approved">
+      <div class="stat-icon">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <div class="stat-content">
+        <h3>456</h3>
+        <p>Approved</p>
+      </div>
+    </div>
+    <div class="stat-card rejected">
+      <div class="stat-icon">
+        <i class="fas fa-times-circle"></i>
+      </div>
+      <div class="stat-content">
+        <h3>23</h3>
+        <p>Rejected</p>
+      </div>
+    </div>
+    <div class="stat-card reported">
+      <div class="stat-icon">
+        <i class="fas fa-flag"></i>
+      </div>
+      <div class="stat-content">
+        <h3>5</h3>
+        <p>Reported</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter Section -->
+  <div class="filter-section">
+    <div class="filter-container">
+      <div class="filter-buttons">
+        <button 
+          class="filter-btn"
+          [class.active]="activeFilter === 'pending'"
+          (click)="setFilter('pending')">
+          <i class="fas fa-clock"></i>
+          Pending Review
+        </button>
+        <button 
+          class="filter-btn"
+          [class.active]="activeFilter === 'approved'"
+          (click)="setFilter('approved')">
+          <i class="fas fa-check"></i>
+          Approved
+        </button>
+        <button 
+          class="filter-btn"
+          [class.active]="activeFilter === 'rejected'"
+          (click)="setFilter('rejected')">
+          <i class="fas fa-times"></i>
+          Rejected
+        </button>
+        <button 
+          class="filter-btn"
+          [class.active]="activeFilter === 'reported'"
+          (click)="setFilter('reported')">
+          <i class="fas fa-flag"></i>
+          Reported
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Photos Grid -->
+  <div class="photos-grid">
+    @if (loading) {
+      <div class="loading-message">Loading photos...</div>
+    } @else if (filteredPhotos.length === 0) {
+      <div class="no-photos-message">No photos to moderate</div>
+    } @else {
+      @for (photo of filteredPhotos; track photo.id) {
+        <div class="photo-card">
+          <div class="photo-container">
+            <img [src]="photo.url" [alt]="'Photo by ' + photo.username">
+            <div class="photo-overlay">
+              <div class="photo-actions">
+                <button class="action-btn approve-btn" (click)="approvePhoto(photo)">
+                  <i class="fas fa-check"></i>
+                </button>
+                <button class="action-btn reject-btn" (click)="rejectPhoto(photo)">
+                  <i class="fas fa-times"></i>
+                </button>
+                <button class="action-btn view-btn" (click)="viewFullSize(photo)">
+                  <i class="fas fa-expand"></i>
+                </button>
+                <button class="action-btn delete-btn" (click)="deletePhoto(photo)">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+            <div class="status-badge badge-pending">
+              Pending Approval
+            </div>
+        </div>
+        <div class="photo-info">
+          <div class="user-info">
+            <img src="./user.png" [alt]="photo.username" class="user-avatar">
+            <div class="user-details">
+              <h4>{{photo.username}}</h4>
+              <p>User ID: {{photo.userId}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      }
+    }
+  </div>
+</div>

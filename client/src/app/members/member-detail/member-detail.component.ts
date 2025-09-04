@@ -61,13 +61,16 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
   onRouteParamsChange() {
     const user = this.accountService.currentUser();
     if(!user) return;
-    if(this.messageService.hubConnection?.state === HubConnectionState.Connected
-      && this.activeTab?.heading === 'Messages'){
-        this.messageService.hubConnection.stop().then(() => {
-          this.messageService.createHubConnection(user, this.member.username);
-        })
-      }
-
+    
+    // Only handle connection if Messages tab is already active
+    // This prevents duplicate connections when navigating from toast
+    if(this.activeTab?.heading === 'Messages'){
+      console.log('Route params changed - reconnecting messages hub');
+      this.messageService.stopHubConnection();
+      setTimeout(() => {
+        this.messageService.createHubConnection(user, this.member.username);
+      }, 100);
+    }
   }
 
   onTabActivated(data: TabDirective){
@@ -81,8 +84,15 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
     if(this.activeTab.heading ==='Messages' && this.member){
         const user = this.accountService.currentUser();
         if(!user) return;
-        this.messageService.createHubConnection(user, this.member.username);
+        
+        console.log('Messages tab activated - creating hub connection');
+        // Stop any existing connection before creating new one
+        this.messageService.stopHubConnection();
+        setTimeout(() => {
+          this.messageService.createHubConnection(user, this.member.username);
+        }, 100);
       } else {
+        console.log('Non-messages tab activated - stopping hub connection');
         this.messageService.stopHubConnection();
       }
   } 

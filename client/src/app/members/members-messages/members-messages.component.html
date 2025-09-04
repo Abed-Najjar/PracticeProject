@@ -1,55 +1,160 @@
-<div class="card">
-    <div class="card-body">
+<div class="modern-chat-container">
+    <!-- Chat Header -->
+    <div class="chat-header">
+        <div class="chat-header-content">
+            <i class="fas fa-comments chat-icon"></i>
+            <h4 class="chat-title">Chat with {{username()}}</h4>
+            @if (messageService.messageThread().length > 0) {
+                <span class="message-count">{{messageService.messageThread().length}} messages</span>
+            }
+        </div>
+    </div>
+
+    <!-- Messages Area -->
+    <div class="messages-area" #scrollMe>
         @if (messageService.messageThread().length === 0) {
-            <p>No messages yet</p>
-        }@else {
-            <ul 
-                class="chat"
-                #scrollMe
-                style="overflow: scroll; max-height: 500px; scroll-behavior: smooth;"
-            >
+            <div class="empty-chat-state">
+                <div class="empty-chat-icon">
+                    <i class="fas fa-comment-dots"></i>
+                </div>
+                <h5>Start the conversation</h5>
+                <p>Send a message to begin chatting with {{username()}}</p>
+            </div>
+        } @else {
+            <div class="messages-list">
                 @for (message of messageService.messageThread(); track message.id) {
-                    <li>
-                        <div>
-                            <span class="chat-image float-end">
-                                <img 
-                                    class="rounded-circle" 
-                                    src="{{message.senderPhotoUrl || './assets/user.png'}}" 
-                                    alt="image of message sender">
-                            </span>
-                            <div class="chat-body">
-                                <div class="header">
-                                    <small class="text-muted">
-                                        <span class="fa fa-clock-o">{{message.messageSent | timeago}}</span>
-                                        @if (!message.dateRead && message.senderUsername != username()) {
-                                            <span class="text-danger">(unread)</span>
-                                        }
-                                        @if (message.dateRead && message.senderUsername != username()) {
-                                            <span class="text-success">(read {{message.dateRead | timeago}})</span>
-                                        }
-                                    </small>
+                    <div class="message-wrapper" [class.own-message]="message.senderUsername === currentUsername">
+                        <!-- Message Bubble -->
+                        <div class="message-bubble" [class.own-bubble]="message.senderUsername === currentUsername">
+                            <!-- Avatar (only show for other user's messages) -->
+                            @if (message.senderUsername !== currentUsername) {
+                                <div class="message-avatar">
+                                    <img 
+                                        src="{{message.senderPhotoUrl || './assets/user.png'}}" 
+                                        alt="{{message.senderUsername}}"
+                                        class="avatar-image">
                                 </div>
-                                <p>{{message.content}}</p>
+                            }
+                            
+                            <!-- Message Content -->
+                            <div class="message-content" [class.own-content]="message.senderUsername === currentUsername">
+                                @if (editingMessageId === message.id) {
+                                    <!-- Edit Mode -->
+                                    <div class="edit-message-container">
+                                        <textarea 
+                                            [(ngModel)]="editMessageContent"
+                                            class="edit-message-input"
+                                            rows="3"
+                                            maxlength="500"
+                                            (keydown.enter)="onTextareaKeydown($event)"
+                                            (keydown.escape)="cancelEdit()"
+                                            #editTextarea>
+                                        </textarea>
+                                        <div class="edit-actions">
+                                            <button class="save-edit-btn" (click)="saveMessageEdit()" [disabled]="!editMessageContent.trim()">
+                                                <i class="fas fa-check"></i> Save
+                                            </button>
+                                            <button class="cancel-edit-btn" (click)="cancelEdit()">
+                                                <i class="fas fa-times"></i> Cancel
+                                            </button>
+                                        </div>
+                                    </div>
+                                } @else {
+                                    <!-- Display Mode -->
+                                    <div class="message-text">{{message.content}}</div>
+                                    
+                                    <!-- Edit Button for own messages within 1 minute -->
+                                    @if (message.senderUsername === currentUsername && canEditMessage(message)) {
+                                        <button class="edit-message-btn" (click)="startEdit(message)" title="Edit message">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    }
+                                }
+                                
+                                <!-- Message Info -->
+                                <div class="message-info">
+                                    <div class="time-and-status">
+                                        <span class="message-time">
+                                            <i class="fas fa-clock"></i>
+                                            {{message.messageSent | timeago}}
+                                        </span>
+                                        
+                                        <!-- Edited Indicator -->
+                                        @if (message.dateEdited) {
+                                            <span class="edited-indicator" [class.edited-left]="message.senderUsername === currentUsername" [class.edited-right]="message.senderUsername !== currentUsername">
+                                                edited
+                                            </span>
+                                        }
+                                    </div>
+                                    
+                                    <!-- Read Status - Show for received messages -->
+                                    @if (message.senderUsername !== currentUsername) {
+                                        @if (!message.dateRead) {
+                                            <span class="read-status unread">
+                                                <i class="fas fa-circle new-indicator"></i>
+                                                New
+                                            </span>
+                                        } @else {
+                                            <span class="read-status read">
+                                                <i class="fas fa-check-double"></i>
+                                                Read {{message.dateRead | timeago}}
+                                            </span>
+                                        }
+                                    } @else {
+                                        <!-- Sent status for own messages -->
+                                        @if (!message.dateRead) {
+                                            <span class="read-status unread">
+                                                <i class="fas fa-check"></i>
+                                                Sent
+                                            </span>
+                                        } @else {
+                                            <span class="read-status read">
+                                                <i class="fas fa-check-double"></i>
+                                                Delivered
+                                            </span>
+                                        }
+                                    }
+                                </div>
                             </div>
                         </div>
-                    </li>
+                    </div>
                 }
-            </ul>
+            </div>
         }
     </div>
-    <div class="card-footer">
-        <form #messageForm="ngForm" (ngSubmit)="sendMessage()">
-            <div class="input-group">
-                <input 
-                    name="messageContent"
-                    required
-                    [(ngModel)]="messageContent"
-                    type="text"
-                    class="form-control input-sm" 
-                    placeholder="Send a private message">
-                <div class="input-group-append">
-                    <button [disabled]="!messageForm.valid" class="btn btn-primary" type="submit">Send</button>
+
+    <!-- Message Input Area -->
+    <div class="message-input-area">
+        <form #messageForm="ngForm" (ngSubmit)="sendMessage()" class="message-form">
+            <div class="input-container">
+                <div class="input-wrapper">
+                    <input 
+                        name="messageContent"
+                        required
+                        [(ngModel)]="messageContent"
+                        type="text"
+                        class="message-input" 
+                        placeholder="Send a private message..."
+                        (keydown.enter)="onInputEnterKey($event)"
+                        #messageInput>
+                    <button 
+                        type="button" 
+                        class="emoji-btn"
+                        title="Add emoji">
+                        <i class="fas fa-smile"></i>
+                    </button>
                 </div>
+                <button 
+                    [disabled]="!messageForm.valid || !messageContent.trim() || isSending" 
+                    class="send-btn" 
+                    type="submit"
+                    title="Send message">
+                    @if (isSending) {
+                        <i class="fas fa-spinner fa-spin"></i>
+                    } @else {
+                        <i class="fas fa-paper-plane"></i>
+                    }
+                </button>
             </div>
         </form>
     </div>

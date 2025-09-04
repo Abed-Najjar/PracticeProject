@@ -6,6 +6,7 @@ import { Photo } from '../_models/photo';
 import { PaginatedResults } from '../_models/pagination';
 import { UserParams } from '../_models/userParams';
 import { of } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { AccountService } from './account.service';
 import { setPaginatedResponse, setPaginationHeaders } from './paginationHelper';
 
@@ -58,12 +59,23 @@ export class MembersService {
     return this.http.get<Member>(this.baseUrl + 'users/' + username);
   }
 
-  updateMember(member: Member){
+  // Force refresh member data from server (bypasses cache)
+  getMemberFresh(username: string){
+    console.log('Fetching fresh member data for:', username);
+    return this.http.get<Member>(this.baseUrl + 'users/' + username).pipe(
+      tap(member => {
+        console.log('Fresh member data received:', member);
+      })
+    );
+  }
+
+  updateMember(memberUpdate: any){
     console.log('API URL:', environment.apiUrl);
-    return this.http.put(this.baseUrl + 'users', member).pipe(
-      // tap(() => {
-      //   this.members.update(members => members.map(m => m.username == member.username ? member : m))
-      // })
+    return this.http.put(this.baseUrl + 'users', memberUpdate).pipe(
+      tap(() => {
+        // Clear the cache to force fresh data on next request
+        this.memberCache.clear();
+      })
     )
   }
 

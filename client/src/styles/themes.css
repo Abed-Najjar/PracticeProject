@@ -1,0 +1,312 @@
+/* ========================================
+   UNIFIED THEME SYSTEM - CSS VARIABLES
+   ======================================== */
+
+:root {
+  /* Light Theme (Default) */
+  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --secondary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  --accent-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  
+  /* Background Colors */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-tertiary: #e9ecef;
+  --bg-overlay: rgba(255, 255, 255, 0.95);
+  
+  /* Glass Effect */
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --glass-backdrop: blur(20px);
+  
+  /* Text Colors */
+  --text-primary: #2c3e50;
+  --text-secondary: #6c757d;
+  --text-tertiary: #adb5bd;
+  --text-inverse: #ffffff;
+  --text-muted: #868e96;
+  
+  /* Border Colors */
+  --border-primary: #dee2e6;
+  --border-secondary: #e9ecef;
+  --border-focus: #4facfe;
+  
+  /* Form Colors */
+  --input-bg: #ffffff;
+  --input-border: #ced4da;
+  --input-focus-border: #4facfe;
+  --input-focus-shadow: 0 0 0 0.2rem rgba(79, 172, 254, 0.25);
+  
+  /* Card Colors */
+  --card-bg: #ffffff;
+  --card-border: #e9ecef;
+  --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --card-hover-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  
+  /* Button Colors */
+  --btn-primary-bg: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  --btn-primary-hover-bg: linear-gradient(135deg, #3498db 0%, #00d4fe 100%);
+  --btn-primary-text: #ffffff;
+  --btn-primary-hover-text: #ffffff;
+  --btn-primary-border: transparent;
+  --btn-primary-hover-border: transparent;
+  --btn-secondary-bg: #6c757d;
+  --btn-secondary-hover-bg: #5a6268;
+  --btn-secondary-text: #ffffff;
+  --btn-secondary-hover-text: #ffffff;
+  --btn-secondary-border: #6c757d;
+  --btn-secondary-hover-border: #5a6268;
+  --btn-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --btn-hover-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  
+  /* Status Colors */
+  --success-color: #28a745;
+  --warning-color: #ffc107;
+  --danger-color: #dc3545;
+  --error-color: #dc3545;
+  --info-color: #17a2b8;
+  --primary-color: #4facfe;
+  
+  /* Additional Variables */
+  --body-bg: var(--bg-primary);
+  --font-family: 'Inter', 'Segoe UI', sans-serif;
+  --input-text: var(--text-primary);
+  --input-focus-bg: var(--input-bg);
+  --input-focus-text: var(--text-primary);
+  --card-header-bg: var(--bg-secondary);
+  --code-bg: #f8f9fa;
+  --code-text: #e83e8c;
+  --error-bg: #f8d7da;
+  --error-text: #721c24;
+  --error-border: #f5c6cb;
+  
+  /* Navigation */
+  --nav-bg: rgba(255, 255, 255, 0.95);
+  --nav-border: rgba(0, 0, 0, 0.1);
+  --nav-link-color: #6c757d;
+  --nav-link-hover-color: #495057;
+  --nav-link-active-color: #4facfe;
+  
+  /* Dropdown */
+  --dropdown-bg: #ffffff;
+  --dropdown-border: #e9ecef;
+  --dropdown-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --dropdown-item-hover-bg: #f8f9fa;
+  
+  /* Modal */
+  --modal-bg: #ffffff;
+  --modal-overlay: rgba(0, 0, 0, 0.5);
+  
+  /* Scrollbar */
+  --scrollbar-thumb: #ced4da;
+  --scrollbar-track: #f8f9fa;
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+  /* Background Colors */
+  --bg-primary: #1a1a2e;
+  --bg-secondary: #16213e;
+  --bg-tertiary: #0f3460;
+  --bg-overlay: rgba(26, 26, 46, 0.95);
+  
+  /* Glass Effect */
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  
+  /* Text Colors */
+  --text-primary: #ffffff;
+  --text-secondary: #b8c5d1;
+  --text-tertiary: #8997a5;
+  --text-inverse: #1a1a2e;
+  --text-muted: #6c7b7f;
+  
+  /* Border Colors */
+  --border-primary: #2d3748;
+  --border-secondary: #4a5568;
+  --border-focus: #4facfe;
+  
+  /* Form Colors */
+  --input-bg: rgba(255, 255, 255, 0.05);
+  --input-border: rgba(255, 255, 255, 0.1);
+  --input-focus-border: #4facfe;
+  --input-focus-shadow: 0 0 0 0.2rem rgba(79, 172, 254, 0.25);
+  
+  /* Card Colors */
+  --card-bg: rgba(255, 255, 255, 0.05);
+  --card-border: rgba(255, 255, 255, 0.1);
+  --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  --card-hover-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
+  
+  /* Button Colors */
+  --btn-primary-bg: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  --btn-primary-hover-bg: linear-gradient(135deg, #3498db 0%, #00d4fe 100%);
+  --btn-primary-text: #ffffff;
+  --btn-primary-hover-text: #ffffff;
+  --btn-primary-border: transparent;
+  --btn-primary-hover-border: transparent;
+  --btn-secondary-bg: #4a5568;
+  --btn-secondary-hover-bg: #2d3748;
+  --btn-secondary-text: #ffffff;
+  --btn-secondary-hover-text: #ffffff;
+  --btn-secondary-border: #4a5568;
+  --btn-secondary-hover-border: #2d3748;
+  --btn-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  --btn-hover-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  
+  /* Status Colors */
+  --success-color: #48bb78;
+  --warning-color: #ed8936;
+  --danger-color: #f56565;
+  --error-color: #f56565;
+  --info-color: #4299e1;
+  --primary-color: #4facfe;
+  
+  /* Additional Variables */
+  --body-bg: var(--bg-primary);
+  --font-family: 'Inter', 'Segoe UI', sans-serif;
+  --input-text: var(--text-primary);
+  --input-focus-bg: var(--input-bg);
+  --input-focus-text: var(--text-primary);
+  --card-header-bg: var(--bg-secondary);
+  --code-bg: #2d3748;
+  --code-text: #f687b3;
+  --error-bg: rgba(245, 101, 101, 0.1);
+  --error-text: #f56565;
+  --error-border: rgba(245, 101, 101, 0.3);
+  
+  /* Navigation */
+  --nav-bg: rgba(26, 26, 46, 0.95);
+  --nav-border: rgba(255, 255, 255, 0.1);
+  --nav-link-color: #b8c5d1;
+  --nav-link-hover-color: #ffffff;
+  --nav-link-active-color: #4facfe;
+  
+  /* Dropdown */
+  --dropdown-bg: #2d3748;
+  --dropdown-border: #4a5568;
+  --dropdown-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  --dropdown-item-hover-bg: #4a5568;
+  
+  /* Modal */
+  --modal-bg: #2d3748;
+  --modal-overlay: rgba(0, 0, 0, 0.8);
+  
+  /* Scrollbar */
+  --scrollbar-thumb: #4a5568;
+  --scrollbar-track: #2d3748;
+}
+
+/* Global Styles Using Theme Variables */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+/* Scrollbar Theming */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-primary);
+}
+
+/* Global Card Styles */
+.themed-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  box-shadow: var(--card-shadow);
+  backdrop-filter: var(--glass-backdrop);
+  color: var(--text-primary);
+}
+
+.themed-card:hover {
+  box-shadow: var(--card-hover-shadow);
+}
+
+/* Global Glass Effect */
+.glass-effect {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+/* Global Form Styles */
+.themed-input {
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--text-primary);
+  border-radius: 8px;
+  padding: 0.75rem;
+  transition: all 0.3s ease;
+}
+
+.themed-input:focus {
+  border-color: var(--input-focus-border);
+  box-shadow: var(--input-focus-shadow);
+  outline: none;
+}
+
+.themed-input::placeholder {
+  color: var(--text-tertiary);
+}
+
+/* Global Button Styles */
+.themed-btn-primary {
+  background: var(--btn-primary-bg);
+  border: none;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.themed-btn-primary:hover {
+  background: var(--btn-primary-hover-bg);
+  transform: translateY(-2px);
+}
+
+.themed-btn-secondary {
+  background: var(--btn-secondary-bg);
+  border: none;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.themed-btn-secondary:hover {
+  background: var(--btn-secondary-hover-bg);
+}
+
+/* Global Text Styles */
+.text-primary { color: var(--text-primary) !important; }
+.text-secondary { color: var(--text-secondary) !important; }
+.text-tertiary { color: var(--text-tertiary) !important; }
+.text-muted { color: var(--text-muted) !important; }
+
+/* Global Background Styles */
+.bg-primary { background: var(--bg-primary) !important; }
+.bg-secondary { background: var(--bg-secondary) !important; }
+.bg-tertiary { background: var(--bg-tertiary) !important; }

@@ -13,11 +13,20 @@ public class AdminController(UserManager<AppUser> userManager) : BaseApiControll
   public async Task<ActionResult> GetUsersWithRoles()
   {
     var users = await userManager.Users
+      .Include(x => x.Photos)
       .OrderBy(x => x.UserName)
       .Select(x => new
       {
         x.Id,
         Username = x.UserName,
+        x.KnownAs,
+        x.Gender,
+        x.City,
+        x.Country,
+        x.Created,
+        x.LastActive,
+        PhotoUrl = x.Photos.FirstOrDefault(p => p.IsMain) != null ? 
+                   x.Photos.FirstOrDefault(p => p.IsMain)!.Url : null,
         Roles = x.UserRoles.Select(r => r.Role.Name).ToList(),
       }).ToListAsync();
 
@@ -52,8 +61,20 @@ public class AdminController(UserManager<AppUser> userManager) : BaseApiControll
 
   [Authorize(Policy = "ModeratePhotoRole")]
   [HttpGet("photos-to-moderate")]
-  public ActionResult GetPhotosForModeration()
+  public async Task<ActionResult> GetPhotosForModeration()
   {
-    return Ok("Admins or moderators can see this");
+    var photos = await userManager.Users
+      .Include(x => x.Photos.Where(p => !p.IsApproved))
+      .SelectMany(u => u.Photos.Where(p => !p.IsApproved).Select(p => new
+      {
+        p.Id,
+        p.Url,
+        p.IsMain,
+        Username = u.UserName,
+        UserId = u.Id
+      }))
+      .ToListAsync();
+
+    return Ok(photos);
   }
 }

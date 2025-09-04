@@ -1,0 +1,77 @@
+/* App Component - Global Theme Application */
+:host {
+  display: block;
+  min-height: 100vh;
+  background: var(--body-bg);
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+}
+
+/* Ensure router outlet content uses theme */
+router-outlet + * {
+  background: var(--body-bg);
+  color: var(--text-primary);
+  min-height: calc(100vh - 80px);
+}
+
+/* Global container styling */
+.main-content {
+  background: var(--body-bg);
+  color: var(--text-primary);
+  min-height: 100vh;
+  padding-top: 80px; /* Account for fixed navbar */
+}
+
+/* Ngx Bootstrap overrides */
+.alert {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  color: var(--text-primary);
+}
+
+.alert-danger {
+  background: var(--error-bg);
+  border-color: var(--error-border);
+  color: var(--error-text);
+}
+
+.modal-content {
+  background: var(--modal-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--border-primary);
+}
+
+.modal-header {
+  background: var(--card-header-bg);
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.modal-footer {
+  background: var(--card-header-bg);
+  border-top: 1px solid var(--border-primary);
+}
+
+/* Toast notifications */
+.toast {
+  background: var(--card-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--card-border);
+}
+
+/* Pagination */
+.pagination .page-link {
+  background: var(--card-bg);
+  border: 1px solid var(--border-primary);
+  color: var(--text-primary);
+}
+
+.pagination .page-link:hover {
+  background: var(--card-header-bg);
+  color: var(--text-primary);
+}
+
+.pagination .page-item.active .page-link {
+  background: var(--btn-primary-bg);
+  border-color: var(--btn-primary-border);
+  color: var(--btn-primary-text);
+}

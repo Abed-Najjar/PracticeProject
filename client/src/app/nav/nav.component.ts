@@ -5,11 +5,12 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { HasRoleDirective } from '../_directives/has-role.directive';
+import { ThemeToggleComponent } from '../shared/theme-toggle/theme-toggle.component';
 
 @Component({
     selector: 'app-nav',
     standalone: true,
-    imports: [FormsModule, BsDropdownModule, RouterLink, RouterLinkActive, HasRoleDirective],
+    imports: [FormsModule, BsDropdownModule, RouterLink, RouterLinkActive, HasRoleDirective, ThemeToggleComponent],
     templateUrl: './nav.component.html',
     styleUrl: './nav.component.css'
 })
